@@ -7,24 +7,17 @@
 <body>
 <div id='result'></div>
 <script>
-
     const result = document.getElementById('result');
 
     fetch('test.wasm')
     .then(response => {
         var mime = response.headers.get('Content-Type');
-        if (mime !== 'application/wasm')
-            throw 'MIME type of test.wasm is "' + mime + '"';
-
-        return WebAssembly.compileStreaming(response);
-    })
-    .then(module => {
-        result.innerText += 'Success!';
+        var status = (mime === 'application/wasm') ? 'SUCCESS' : 'FAIL';
+        result.innerText = status + ': test.wasm has Content-Type "' + mime + '"';
     })
     .catch(error => {
-        result.innerText += 'Failed with error: ' + String(error);
+        result.innerText = "Failed to fetch: " + String(error);
     });
-
 </script>
 </body>
 </html>
