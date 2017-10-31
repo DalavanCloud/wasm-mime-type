@@ -18,6 +18,7 @@
         return WebAssembly.compileStreaming(response);
     })
     .then(module => {
+        var dt = performance.now() - start;
         result.innerText += " and compileStreaming resolved successfully";
     })
     .catch(error => {
