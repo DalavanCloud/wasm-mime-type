@@ -8,20 +8,24 @@
 <div id='result'></div>
 <script>
     const result = document.getElementById('result');
-
     const start = performance.now();
 
     fetch('tanks.wasm')
     .then(response => {
         var mime = response.headers.get('Content-Type');
         var encoding = response.headers.get('Content-Encoding');
-        var status = (mime === 'application/wasm') ? 'SUCCESS' : 'FAIL';
-        result.innerText = status + ': tanks.wasm has Content-Type "' + mime + '" and Content-Encoding "' + encoding + '"';
-        return WebAssembly.compileStreaming(response);
-    })
-    .then(module => {
-        var dt = performance.now() - start;
-        result.innerText += " and took " + dt + "ms to fetch+compileStreaming";
+        if (mime !== 'application/wasm') {
+            result.innerText = 'FAIL: tanks.wasm has Content-Type "' + mime + '"';
+            return;
+        }
+        result.innerText = 'SUCCESS: tanks.wasm has Content-Type "' + mime + '" and Content-Encoding "' + encoding + '"';
+        if (WebAssembly.compileStreaming) {
+            return WebAssembly.compileStreaming(response)
+                   .then(module => {
+                        var dt = performance.now() - start;
+                        result.innerText += " and took " + dt + "ms to fetch+compileStreaming";
+                    });
+        }
     })
     .catch(error => {
         result.innerText = "Failed with error: " + String(error);
