@@ -12,8 +12,9 @@
     fetch('test.wasm')
     .then(response => {
         var mime = response.headers.get('Content-Type');
+        var encoding = response.headers.get('Content-Encoding');
         var status = (mime === 'application/wasm') ? 'SUCCESS' : 'FAIL';
-        result.innerText = status + ': test.wasm has Content-Type "' + mime + '"';
+        result.innerText = status + ': test.wasm has Content-Type "' + mime + '" and Content-Encoding "' + encoding + '"';
     })
     .catch(error => {
         result.innerText = "Failed to fetch: " + String(error);
