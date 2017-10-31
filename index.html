@@ -9,15 +9,22 @@
 <script>
     const result = document.getElementById('result');
 
-    fetch('test2.wasm')
+    const start = performace.now();
+
+    fetch('tanks.wasm')
     .then(response => {
         var mime = response.headers.get('Content-Type');
         var encoding = response.headers.get('Content-Encoding');
         var status = (mime === 'application/wasm') ? 'SUCCESS' : 'FAIL';
-        result.innerText = status + ': test2.wasm has Content-Type "' + mime + '" and Content-Encoding "' + encoding + '"';
+        result.innerText = status + ': tanks.wasm has Content-Type "' + mime + '" and Content-Encoding "' + encoding + '"';
+        return WebAssembly.compileStreaming(response);
+    })
+    .then(module => {
+        var dt = performance.now() - start;
+        result.innerText += " and took " + dt + "ms to fetch+compileStreaming";
     })
     .catch(error => {
-        result.innerText = "Failed to fetch: " + String(error);
+        result.innerText = "Failed with error: " + String(error);
     });
 </script>
 </body>
