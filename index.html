@@ -9,8 +9,6 @@
 <script>
     const result = document.getElementById('result');
 
-    const start = performance.now();
-
     fetch('tanks.wasm')
     .then(response => {
         var mime = response.headers.get('Content-Type');
@@ -21,7 +19,7 @@
     })
     .then(module => {
         var dt = performance.now() - start;
-        result.innerText += " and took " + dt + "ms to fetch+compileStreaming";
+        result.innerText += " and compileStreaming resolved successfully";
     })
     .catch(error => {
         result.innerText = "Failed with error: " + String(error);
